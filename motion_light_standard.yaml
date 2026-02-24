@@ -1,9 +1,9 @@
 blueprint:
-  name: Motion Light (Standard)
+  name: Motion Light Standard
   description: >
-    Schaltet Lichter bei Bewegung ein (sanftes Einblenden) und nach einer
-    konfigurierbaren Wartezeit wieder aus (sanftes Ausblenden).
-    Einheitlicher Standard für alle Räume.
+    Turn on lights (and optional switches) when motion is detected.
+    Turn off after a configurable no-motion delay. Supports both lights
+    and switches (e.g. mirror cabinet, fan).
   domain: automation
   input:
     motion_sensor:
@@ -16,13 +16,24 @@ blueprint:
     light_target:
       name: Licht(er)
       description: Welche Lichter gesteuert werden sollen.
+      default: {}
       selector:
         target:
           entity:
             domain: light
+    switch_target:
+      name: Switch(es) — optional
+      description: >
+        Zusätzliche Switches die zusammen mit den Lichtern gesteuert werden
+        (z.B. Spiegelschrank, Ventilator).
+      default: {}
+      selector:
+        target:
+          entity:
+            domain: switch
     no_motion_wait:
       name: Wartezeit nach letzter Bewegung
-      description: Wie lange nach der letzten Bewegung das Licht noch an bleibt.
+      description: Wie lange nach der letzten Bewegung Licht und Switches noch an bleiben.
       default:
         hours: 0
         minutes: 30
@@ -36,7 +47,7 @@ blueprint:
       selector:
         number:
           min: 0
-          max: 30
+          max: 60
           unit_of_measurement: s
     transition_off:
       name: Ausblend-Zeit (Sekunden)
@@ -48,28 +59,31 @@ blueprint:
           max: 60
           unit_of_measurement: s
 
-triggers:
-  - trigger: state
+trigger:
+  - platform: state
     entity_id: !input motion_sensor
-    from: null
     to: "on"
 
-conditions: []
-
-actions:
-  - action: light.turn_on
+action:
+  - service: light.turn_on
     target: !input light_target
     data:
       transition: !input transition_on
+  - service: switch.turn_on
+    target: !input switch_target
   - wait_for_trigger:
-      - trigger: state
+      - platform: state
         entity_id: !input motion_sensor
-        from: null
         to: "off"
         for: !input no_motion_wait
-  - action: light.turn_off
+    timeout:
+      hours: 2
+    continue_on_timeout: true
+  - service: light.turn_off
     target: !input light_target
     data:
       transition: !input transition_off
+  - service: switch.turn_off
+    target: !input switch_target
 
 mode: restart
