@@ -1,0 +1,30 @@
+{
+  "id": "1771515204095",
+  "alias": "Bed All Lights Off",
+  "description": "",
+  "triggers": [
+    {
+      "domain": "mqtt",
+      "device_id": "2633193a3105788091dffc9fe7a859b9",
+      "type": "action",
+      "subtype": "off_hold",
+      "trigger": "device"
+    },
+    {
+      "domain": "mqtt",
+      "device_id": "de50fa51b588143359ecc2be2a42d794",
+      "type": "action",
+      "subtype": "off_hold",
+      "trigger": "device"
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "action": "script.all_lights_off",
+      "metadata": {},
+      "data": {}
+    }
+  ],
+  "mode": "single"
+}

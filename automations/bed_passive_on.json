@@ -1,0 +1,39 @@
+{
+  "id": "1771515284631",
+  "alias": "Bed Passive On",
+  "description": "",
+  "triggers": [
+    {
+      "domain": "mqtt",
+      "device_id": "2633193a3105788091dffc9fe7a859b9",
+      "type": "action",
+      "subtype": "on_press",
+      "trigger": "device"
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "action": "switch.turn_on",
+      "metadata": {},
+      "target": {
+        "entity_id": "switch.bedroom_green"
+      },
+      "data": {}
+    },
+    {
+      "action": "switch.turn_off",
+      "metadata": {},
+      "target": {
+        "entity_id": [
+          "switch.adaptive_lighting_sleep_mode_adaptive_light",
+          "switch.adaptive_lighting_sleep_mode_adaptive_light_hallway",
+          "switch.adaptive_lighting_sleep_mode_adaptive_light_bathroom",
+          "switch.adaptive_lighting_sleep_mode_adaptive_light_living_room"
+        ]
+      },
+      "data": {}
+    }
+  ],
+  "mode": "single"
+}

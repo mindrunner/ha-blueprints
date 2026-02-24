@@ -1,0 +1,28 @@
+{
+  "id": "1771874131601",
+  "alias": "Sleep Mode Off at 11:00",
+  "description": "Automatischer Sleep-Mode-Reset um 11:00 Uhr als Fallback",
+  "triggers": [
+    {
+      "platform": "time",
+      "at": "11:00:00"
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "action": "switch.turn_off",
+      "metadata": {},
+      "target": {
+        "entity_id": [
+          "switch.adaptive_lighting_sleep_mode_adaptive_light",
+          "switch.adaptive_lighting_sleep_mode_adaptive_light_hallway",
+          "switch.adaptive_lighting_sleep_mode_adaptive_light_bathroom",
+          "switch.adaptive_lighting_sleep_mode_adaptive_light_living_room"
+        ]
+      },
+      "data": {}
+    }
+  ],
+  "mode": "single"
+}

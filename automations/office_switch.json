@@ -1,0 +1,26 @@
+{
+  "id": "1771499811464",
+  "alias": "Office Switch ",
+  "description": "",
+  "triggers": [
+    {
+      "domain": "mqtt",
+      "device_id": "3df26236eeae2f8372cab90ccc559313",
+      "type": "action",
+      "subtype": "on_press",
+      "trigger": "device"
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "action": "scene.turn_on",
+      "metadata": {},
+      "target": {
+        "entity_id": "scene.office_passive"
+      },
+      "data": {}
+    }
+  ],
+  "mode": "single"
+}
