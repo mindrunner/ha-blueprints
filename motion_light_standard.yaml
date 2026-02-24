@@ -1,0 +1,75 @@
+blueprint:
+  name: Motion Light (Standard)
+  description: >
+    Schaltet Lichter bei Bewegung ein (sanftes Einblenden) und nach einer
+    konfigurierbaren Wartezeit wieder aus (sanftes Ausblenden).
+    Einheitlicher Standard für alle Räume.
+  domain: automation
+  input:
+    motion_sensor:
+      name: Bewegungsmelder
+      description: Binärer Sensor der Bewegung erkennt.
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: motion
+    light_target:
+      name: Licht(er)
+      description: Welche Lichter gesteuert werden sollen.
+      selector:
+        target:
+          entity:
+            domain: light
+    no_motion_wait:
+      name: Wartezeit nach letzter Bewegung
+      description: Wie lange nach der letzten Bewegung das Licht noch an bleibt.
+      default:
+        hours: 0
+        minutes: 30
+        seconds: 0
+      selector:
+        duration: {}
+    transition_on:
+      name: Einblend-Zeit (Sekunden)
+      description: Wie lange das Licht zum Einblenden braucht.
+      default: 5
+      selector:
+        number:
+          min: 0
+          max: 30
+          unit_of_measurement: s
+    transition_off:
+      name: Ausblend-Zeit (Sekunden)
+      description: Wie lange das Licht zum Ausblenden braucht.
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 60
+          unit_of_measurement: s
+
+triggers:
+  - trigger: state
+    entity_id: !input motion_sensor
+    from: null
+    to: "on"
+
+conditions: []
+
+actions:
+  - action: light.turn_on
+    target: !input light_target
+    data:
+      transition: !input transition_on
+  - wait_for_trigger:
+      - trigger: state
+        entity_id: !input motion_sensor
+        from: null
+        to: "off"
+        for: !input no_motion_wait
+  - action: light.turn_off
+    target: !input light_target
+    data:
+      transition: !input transition_off
+
+mode: restart
